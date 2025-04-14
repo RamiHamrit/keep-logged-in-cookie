@@ -1,0 +1,79 @@
+<!-- views/pages/home.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brute-Force Challenge</title>
+  <link href="/css/styles.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+</head>
+<body class="bg-gray-100 font-inter">
+  <nav class="bg-blue-600 text-white p-6 shadow-md">
+    <div class="container mx-auto flex justify-between items-center">
+      <a href="/" class="text-2xl font-bold">Brute-Force Challenge</a>
+      <div class="space-x-4">
+        <% if (user) { %>
+          <span class="text-lg">Welcome, User!</span>
+          <a href="/logout" class="btn-danger transform hover:scale-105 transition duration-300">Logout</a>
+        <% } else { %>
+          <a href="/login" class="text-lg hover:underline">Login</a>
+          <a href="/register" class="btn-secondary transform hover:scale-105 transition duration-300">Register</a>
+        <% } %>
+      </div>
+    </div>
+  </nav>
+  <main class="container mx-auto mt-10 px-4">
+    <div class="bg-white p-8 rounded-lg shadow-lg max-w-2xl mx-auto transition-all duration-300 hover:shadow-xl">
+      <h1 class="text-3xl font-bold text-gray-800 mb-6">Brute-Force Challenge</h1>
+      <p class="text-gray-600 mb-4">
+        Welcome to the challenge! Your goal is to brute-force the <code>stay-logged-in</code> cookie of the target user. The cookie is Base64-encoded in the format <code>username:hash</code>, where the hash is MD5(password). Log in with "Login with Vulnerability" mode to participate and access the target user’s account!
+      </p>
+      <% if (error) { %>
+        <p class="text-red-500 mb-4"><%= error %></p>
+      <% } %>
+      <h2 class="text-xl font-semibold text-gray-800 mb-4">Target User to Brute-Force</h2>
+      <p class="text-gray-600 mb-4">Username: <span class="font-semibold text-red-500"><%= targetUser.username %></span></p>
+      
+      <% if (user) { %>
+        <% if (canParticipate) { %>
+          <h2 class="text-xl font-semibold text-gray-800 mb-4">All Users</h2>
+          <ul class="list-disc list-inside mb-6 text-gray-600 space-y-2">
+            <% users.forEach(u => { %>
+              <li class="hover:bg-gray-100 p-2 rounded">
+                <%= u.username %>: 
+                <% if (u.username === targetUser.username) { %>
+                  <span class="text-red-500">Password Hidden (Brute-Force Me!)</span>
+                <% } else { %>
+                  <%= initialUsers.find(iu => iu.username === u.username)?.password || 'Unknown' %>
+                <% } %>
+              </li>
+            <% }) %>
+          </ul>
+        <% } else { %>
+          <p class="text-red-500 mb-4 animate-pulse">You cannot participate in the challenge without using "Login with Vulnerability" mode!</p>
+        <% } %>
+      <% } else { %>
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">Try Logging In</h2>
+        <p class="text-gray-600 mb-4">
+          Use this random account to log in:
+          <br>
+          Username: <span class="font-semibold text-blue-500"><%= randomLoginUser ? randomLoginUser.username : 'N/A' %></span>
+          <br>
+          Password: <span class="font-semibold text-blue-500"><%= randomLoginUser ? randomLoginUser.password : 'N/A' %></span>
+        </p>
+        <p class="text-gray-600 mb-4">Log in to see the full list of users and their passwords (except the target’s)!</p>
+      <% } %>
+      <h2 class="text-xl font-semibold text-gray-800 mb-4">Password List</h2>
+      <p class="text-gray-600 mb-4">
+        Download the list of possible passwords to brute-force the target user’s cookie:
+        <a href="/download-passwords" class="text-blue-500 hover:underline">passwords.txt</a>
+      </p>
+    </div>
+  </main>
+  <footer class="bg-gray-800 text-white text-center py-4 mt-10">
+    <p>© 2025 Brute-Force Challenge</p>
+  </footer>
+</body>
+</html>

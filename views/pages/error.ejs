@@ -1,0 +1,41 @@
+<!-- views/pages/error.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Error - Brute-Force Challenge</title>
+  <link href="/css/styles.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+</head>
+<body class="bg-gray-100 font-inter">
+  <nav class="bg-blue-600 text-white p-6 shadow-md">
+    <div class="container mx-auto flex justify-between items-center">
+      <a href="/" class="text-2xl font-bold">Brute-Force Challenge</a>
+      <div class="space-x-4">
+        <% if (user) { %>
+          <span class="text-lg">Welcome, User!</span>
+          <a href="/logout" class="btn-danger transform hover:scale-105 transition duration-300">Logout</a>
+        <% } else { %>
+          <a href="/login" class="text-lg hover:underline">Login</a>
+          <a href="/register" class="btn-secondary transform hover:scale-105 transition duration-300">Register</a>
+        <% } %>
+      </div>
+    </div>
+  </nav>
+  <main class="container mx-auto mt-10 px-4">
+    <div class="bg-white p-8 rounded-lg shadow-lg max-w-2xl mx-auto transition-all duration-300">
+      <h1 class="text-3xl font-bold text-gray-800 mb-6">Oops! Something Went Wrong</h1>
+      <p class="text-red-500 mb-4"><%= error %></p>
+      <p class="text-gray-600 mb-4">Please try going back or visit the homepage.</p>
+      <div class="mt-6">
+        <a href="/" class="btn-primary w-full py-3 rounded-lg inline-block hover:bg-blue-700 transition duration-300 transform hover:scale-105">Back to Home 🏠</a>
+      </div>
+    </div>
+  </main>
+  <footer class="bg-gray-800 text-white text-center py-4 mt-10">
+    <p>© 2025 Brute-Force Challenge</p>
+  </footer>
+</body>
+</html>

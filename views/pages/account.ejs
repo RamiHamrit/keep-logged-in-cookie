@@ -1,0 +1,77 @@
+<!-- views/pages/account.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Account - Brute-Force Challenge</title>
+  <link href="/css/styles.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+</head>
+<body class="bg-gray-100 font-inter">
+  <nav class="bg-blue-600 text-white p-6 shadow-md">
+    <div class="container mx-auto flex justify-between items-center">
+      <a href="/" class="text-2xl font-bold">Brute-Force Challenge</a>
+      <div class="space-x-4">
+        <a href="/" class="text-lg hover:underline">Home</a>
+        <a href="/logout" class="btn-danger transform hover:scale-105 transition duration-300">Logout</a>
+      </div>
+    </div>
+  </nav>
+  <main class="container mx-auto mt-10 px-4">
+    <div class="bg-white p-8 rounded-lg shadow-lg max-w-2xl mx-auto transition-all duration-300">
+      <h1 class="text-3xl font-bold text-gray-800 mb-6">Account Access</h1>
+      <p class="text-lg text-gray-600 mb-4">Welcome, <span class="font-semibold text-blue-600"><%= username %></span>!</p>
+      <% if (message) { %>
+        <p class="text-green-600 mb-4 animate-pulse"><%= message %></p>
+      <% } %>
+      <% if (isVulnerable) { %>
+        <% if (username === targetUser.username) { %>
+          <p class="text-2xl font-semibold text-green-600 mb-4">Congratulations! You solved the challenge by brute-forcing the <code>stay-logged-in</code> cookie!</p>
+          <canvas id="confetti-canvas" class="absolute inset-0 pointer-events-none"></canvas>
+          <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+          <script>
+            const canvas = document.getElementById('confetti-canvas');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            confetti({
+              particleCount: 200,
+              spread: 70,
+              origin: { y: 0.6 },
+            });
+          </script>
+        <% } else { %>
+          <p class="text-gray-600 mb-4">You accessed a user's account using the vulnerable cookie. Now, brute-force the target user: <span class="font-semibold text-red-500"><%= targetUser.username %></span>!</p>
+          <h2 class="text-xl font-semibold text-gray-800 mb-4">Password Candidates</h2>
+          <p class="text-gray-600 mb-2">Use these passwords to craft a <code>stay-logged-in</code> cookie for <span class="font-semibold"><%= targetUser.username %></span>:</p>
+          <div class="overflow-x-auto">
+            <table class="min-w-full border-collapse border border-gray-300 mb-6 text-gray-600">
+              <thead>
+                <tr class="bg-gray-100">
+                  <th class="border border-gray-300 p-3 text-left">Password</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% initialUsers.forEach(u => { %>
+                  <tr class="hover:bg-gray-50">
+                    <td class="border border-gray-300 p-3"><%= u.password %></td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+        <% } %>
+      <% } else { %>
+        <p class="text-gray-600 mb-4">You logged in securely using a token. The brute-force challenge is not applicable in this mode.</p>
+      <% } %>
+      <div class="mt-6">
+        <a href="/logout" class="btn-danger w-full py-3 rounded-lg inline-block hover:bg-red-700 transition duration-300 transform hover:scale-105">Log Out</a>
+      </div>
+    </div>
+  </main>
+  <footer class="bg-gray-800 text-white text-center py-4 mt-10">
+    <p>© 2025 Brute-Force Challenge</p>
+  </footer>
+</body>
+</html>
