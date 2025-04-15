@@ -1,4 +1,3 @@
-// controllers/challengeController.js
 const User = require('../models/User');
 const { initialUsers, targetUser, getRandomLoginUser } = require('../utils/userUtils');
 
@@ -17,11 +16,11 @@ module.exports = {
         canParticipate: !!req.cookies['stay-logged-in'],
       });
     } catch (err) {
-      console.error('Error fetching users:', err.message);
+      console.error('❌ Error fetching users:', err.message);
       res.render('pages/home', {
         user: req.session.user,
         users: [],
-        error: 'Failed to load users. Please try again later.',
+        error: 'Failed to load users. Please try again later. 😕',
         targetUser,
         initialUsers,
         randomLoginUser: null,
@@ -31,14 +30,23 @@ module.exports = {
   },
 
   getAccount: (req, res) => {
-    const { username, isVulnerable } = req.auth;
+    const { username, isVulnerable, isSessionOnly } = req.auth;
+    let loginMessage;
+    if (isVulnerable) {
+      loginMessage = 'with vulnerability';
+    } else if (isSessionOnly) {
+      loginMessage = 'using session only';
+    } else {
+      loginMessage = 'securely with a token';
+    }
     res.render('pages/account', {
       user: req.session.user,
       username,
       targetUser,
       initialUsers,
-      message: `Welcome back, ${username}! You logged in ${isVulnerable ? 'with vulnerability' : 'securely'}!`,
+      message: `Welcome back, ${username}! You logged in ${loginMessage}! 🎉`,
       isVulnerable,
+      isSessionOnly,
     });
   },
 
@@ -49,10 +57,10 @@ module.exports = {
       res.setHeader('Content-Type', 'text/plain');
       res.send(passwords);
     } catch (err) {
-      console.error('Download passwords error:', err.message);
+      console.error('❌ Download passwords error:', err.message);
       res.status(500).render('pages/error', {
         user: req.session.user,
-        error: 'Failed to download passwords. Try again later.',
+        error: 'Failed to download passwords. Try again later. 😕',
       });
     }
   },
